@@ -93,8 +93,42 @@ def add_new_list():
 def get_all_lists():
     return jsonify(todo_lists)
 
+@app.route('/todos', methods=['GET'])
+def get_all_todos():
+    return jsonify(todos)
+
+@app.route('/todos/<todos_id>', methods=['GET', 'DELETE'])
+def handle_todos(todos_id):
+    # find todo depending on given todos id
+    todos_item = None
+    for l in todo_lists:
+        if l['id'] == todos_id:
+            todos_item = l
+            break
+    # if the given todos id is invalid, return status code 404
+    if not todos_item:
+        abort(404)
+    if request.method == 'GET':
+        # find all todo entries for the todo list with the given id
+        print('Returning todos list...')
+        return jsonify([i for i in todos if i['todos'] == todos_id])
+    elif request.method == 'DELETE':
+        # delete todos with given id
+        print('Deleting todos...')
+        todo_lists.remove(todos_item)
+        return '', 200
+# define endpoint for adding a new todo
+@app.route('/todo', methods=['POST'])
+def add_new_todo():
+    # make JSON from POST data (even if content type is not set correctly)
+    new_list = request.get_json(force=True)
+    print('Got new todo to be added: {}'.format(new_todo))
+    # create id for new list, save it and return the list with id
+    new_todo['id'] = uuid.uuid4()
+    todo_lists.append(new_todo)
+    return jsonify(new_todo), 200
 
 if __name__ == '__main__':
     # start Flask server
     app.debug = True
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='http://127.0.0.1', port=5000)

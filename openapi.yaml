@@ -3,7 +3,7 @@ info:
   title: Todo-List REST API
   version: 1.0.0
 servers:
-  - url: http://localhost:8000/api/v1
+  - url: http://localhost:5000/api/v1
 paths:
   /todo-list:
     get:
@@ -91,9 +91,9 @@ paths:
           description: Todo-list not found
         '500':
           description: Internal server error
-  /todo-list/{list_id}/entry:
+  /todo-list/{list_id}/todo:
     post:
-      summary: Adds a new entry to a specific todo-list
+      summary: Adds a new todo to a specific todo-list
       parameters:
         - name: list_id
           in: path
@@ -110,45 +110,44 @@ paths:
               properties:
                 description:
                   type: string
-                  description: The description of the new entry
+                  description: The description of the new todo
               required:
                 - description
       responses:
         '200':
-          description: A JSON object containing the ID and description of the new entry
+          description: A JSON object containing the ID and description of the new todo
         '404':
           description: Todo-list not found
         '500':
           description: Internal server error
-  /entry/{entry_id}:
+  /todo/{todo_id}:
     patch:
-      summary: Updates a specific entry of a todo-list
+      summary: Updates a specific todo of a todo-list
       parameters:
-        - name: entry_id
+        - name: todo_id
           in: path
-          description: The ID of the entry
+          description: The ID of the todo
           required: true
       responses:
         '200':
-          description: A JSON object containing the ID and description of the new entry
+          description: A JSON object containing the ID and description of the new todo
         '404':
           description: Todo-list not found
         '500':
           description: Internal server error
-  /entry/{entry_id}:
-      delete:
-        summary: Deletes a specific entry
-        parameters:
-          - name: entry_id
-            in: path
-            description: The ID of the entry
-            required: true
+    delete:
+      summary: Deletes a specific todo
+      parameters:
+        - name: todo_id
+          in: path
+          description: The ID of the todo
+          required: true
             schema:
               type: string
-        responses:
-          '200':
-            description: entry deleted
-          '404':
-            description: entry not found
-          '500':
-            description: Internal server error
+      responses:
+        '200':
+          description: todo deleted
+        '404':
+          description: todo not found
+        '500':
+          description: Internal server error
